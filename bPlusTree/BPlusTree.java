@@ -3,11 +3,7 @@ import java.util.AbstractMap;
 import java.util.Map.Entry;
 import java.util.ArrayList;
 
-import bPlusTree.Node;
-
-import java.util.ArrayList;
-
-class BPlusTree<K extends Comparable<K>, T> {
+public class BPlusTree<K extends Comparable<K>, T> {
 
     public Node<K, T> root;
     public static final int D = 2;
