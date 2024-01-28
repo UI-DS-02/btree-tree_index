@@ -3,7 +3,7 @@ package database;
 public class Value <T>{
     T thing;
 
-    public T getThing() {
+    public T getThing() { 
         return thing;
     }
 

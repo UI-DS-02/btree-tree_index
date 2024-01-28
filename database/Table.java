@@ -3,18 +3,19 @@ package database;
 import bPlusTree.*;
 
 public class Table<T> {
-    private Column<T>[] columns;
-    private BPlusTree<Integer,Table> btreeIndex = new BPlusTree();
+    private Column[] columns;
+    private BPlusTree<Integer,T> table;
 
     public Table(int number) {
         this.columns = new Column[number];
+        this.table=new BPlusTree<Integer,T>();
     }
 
-    public Column<T>[] getColumns() {
+    public Column[] getColumns() {
         return columns;
     }
 
-    public void setColumns(Column<T>[] columns) {
+    public void setColumns(Column[] columns) {
         this.columns = columns;
     }
 }
