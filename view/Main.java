@@ -26,10 +26,6 @@ public class Main {
                 case 2 -> delete();
                 case 3 -> update();
                 case 4 -> select();
-
-//        for (int i = 0; i < number_table; i++) {
-//            adding_owner(number_row, tables.get(i));
-//        }
             }
             order = sc.nextInt();
         }
@@ -53,15 +49,13 @@ public class Main {
         int number_row = 0;
         int number_columns = 0;
         for (int j = 0; j < number_table; j++) {
-            System.out.println("Enter the name of the table:");
-            String name = sc.next();
             System.out.println("enter the number of columns:");
             number_columns = sc.nextInt();
             System.out.println("Enter the number of rows:");
             number_row = sc.nextInt();
             sc.nextLine();
             for (int i = 0; i < number_table; i++) {
-                Table table = database.creatTable(name);
+                Table table = database.creatTable();
                 for (int l = 0; l < number_row; l++) {
                     Owner owner = table.make_new_row();
                     System.out.println("Enter the data of this row:");
@@ -79,9 +73,11 @@ public class Main {
                         owner.addColumn(column);
                     }
                 }
+                table.creatIndex(number_columns);
             }
         }
     }
+
     static Object check_type(String data_type) {
         // checking if input type is true or not
         Scanner sc = new Scanner(System.in);

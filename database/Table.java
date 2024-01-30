@@ -4,13 +4,11 @@ import bPlusTree.*;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class Table<T> {
     private int id;
+    static int index = 0;
     private ArrayList<Owner> owners;
     private ArrayList<Column> columns;
     private BPlusTree<Integer, List<Owner>> table;
@@ -34,7 +32,7 @@ public class Table<T> {
     public Table(int id) {
         columns = new ArrayList<>();
         owners = new ArrayList<>();
-        this.id=id;
+        this.id = id;
     }
 
     public Column make_new_column(Object value, String name, String type) {
@@ -55,42 +53,36 @@ public class Table<T> {
     }
 
     public Owner make_new_row() {
-        owners.add(new Owner());
-        return owners.get(owners.size()-1);
+        owners.add(new Owner(index++));
+        return owners.get(owners.size() - 1);
     }
 
-    Object check_type(String data_type) {
-        // checking if input type is true or not
-        Scanner sc = new Scanner(System.in);
-        Object input = null;
-        if (data_type.equalsIgnoreCase("String")) {
-
-            input = sc.next();
-
-        } else if (data_type.equalsIgnoreCase("double")) {
-            input = (Double) sc.nextDouble();
-
-        } else if (data_type.equalsIgnoreCase("integer")) {
-            input = sc.nextInt();
-        } else if (data_type.equalsIgnoreCase("history")) {
-
-        } else if (data_type.equalsIgnoreCase("time")) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH.mm.ss.nnn");
-            String time = sc.next();
-            input = LocalTime.parse(time, formatter);
+    public void creatIndex(int columnNumber) {
+        boolean checkUniqId = false;
+        for (int i = 0; i < columnNumber; i++) {
+            if (columns.get(i).name.equals("id")) {
+                checkUniqId = true;
+            }
         }
-        return input;
+        if (!checkUniqId) creatOriginalId();
+        else {
+            List<Owner> list = new ArrayList<>();
+            for (Owner owner : owners) {
+                for (Column column : owner.getColumns()) {
+                    if (column.datatype.equals("id")) {
+                        list.add(owner);
+                        table.insert(Integer.parseInt(column.value.toString()), list);
+                    }
+                }
+            }
+        }
     }
 
-//    void adding_owner(int number_row, Table<Object> table) {
-//        for (int i = 0; i < number_row; i++) {
-//            Owner<Object> owner = new Owner<>();
-//            for (int j = 0; j < table.getColumns().size(); j++) {
-//                System.out.println("enter " + table.getColumns().get(j).getName());
-//                columns.get(j).setValue(check_type((String) table.getColumns().get(j).getDatatype()));
-//            }
-//            owner.setColumns(table.getColumns());
-//            table.getOwners().add(owner);
-//        }
-//    }
+    void creatOriginalId() {
+        List<Owner> list = new ArrayList<>();
+        for (Owner owner : owners) {
+            list.add(owner);
+            table.insert(owner.getId(), list);
+        }
+    }
 }
