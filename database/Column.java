@@ -3,8 +3,14 @@ package database;
 public class Column<T> {
 
     String name;
-    Object datatype;
+    String datatype;
     T value;
+
+    public Column(String name, String datatype, T value) {
+        this.name = name;
+        this.datatype = datatype;
+        this.value = value;
+    }
 
     public String getName() {
         return name;
@@ -18,7 +24,7 @@ public class Column<T> {
         return datatype;
     }
 
-    public void setDatatype(Object datatype) {
+    public void setDatatype(String datatype) {
         this.datatype = datatype;
     }
 
