@@ -1,13 +1,12 @@
 package database;
 
 public class Value <T>{
-    T thing;
-
-    public T getThing() { 
-        return thing;
+    T value;
+    public T getValue() {
+        return value;
     }
 
-    public void setThing(T thing) {
-        this.thing = thing;
+    public void setValue(T value) {
+        this.value = value;
     }
 }

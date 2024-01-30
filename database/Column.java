@@ -1,19 +1,32 @@
 package database;
 
 public class Column<T> {
-    private Value<T>[] values;
-    private int index;
 
-    public Column(int number, int index) {
-        this.values = new Value[number];
-        this.index = index;
+    String name;
+    Object datatype;
+    T value;
+
+    public String getName() {
+        return name;
     }
 
-    public Value<T>[] getValues() {
-        return values;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setValues(Value<T>[] values) {
-        this.values = values;
+    public Object getDatatype() {
+        return datatype;
+    }
+
+    public void setDatatype(Object datatype) {
+        this.datatype = datatype;
+    }
+
+    public T getValue() {
+        return value;
+    }
+
+    public void setValue(T value) {
+        this.value = value;
     }
 }
