@@ -12,9 +12,11 @@ public class Table<T> {
     private ArrayList<Owner> owners;
     private ArrayList<Column> columns;
     private BPlusTree<Integer, List<Owner>> table;
+    private BPlusTree<Integer,Owner> secondIndex;
+    private String name;
 
-    public ArrayList<Owner> getOwners() {
-        return owners;
+    public Owner[] getOwners() {
+        return (Owner[]) owners.toArray();
     }
 
     public void setOwners(ArrayList<Owner> owners) {
@@ -29,10 +31,19 @@ public class Table<T> {
         this.columns = columns;
     }
 
-    public Table(int id) {
+    public Table(int id, String name) {
+        table = new BPlusTree<>();
         columns = new ArrayList<>();
         owners = new ArrayList<>();
         this.id = id;
+    }
+
+    public String selectAll() {
+        return table.toString();
+    }
+
+    public String search(Owner owner) {
+        return table.search(owner.getId()).toString();
     }
 
     public Column make_new_column(Object value, String name, String type) {
@@ -52,37 +63,56 @@ public class Table<T> {
         return columns.get(columns.size() - 1);
     }
 
-    public Owner make_new_row() {
-        owners.add(new Owner(index++));
+    public Owner make_new_row(String name) {
+        owners.add(new Owner(index++, name));
         return owners.get(owners.size() - 1);
     }
 
-    public void creatIndex(int columnNumber) {
-        boolean checkUniqId = false;
-        for (int i = 0; i < columnNumber; i++) {
-            if (columns.get(i).name.equals("id")) {
-                checkUniqId = true;
-            }
-        }
-        if (!checkUniqId) creatOriginalId();
-        else {
-            List<Owner> list = new ArrayList<>();
-            for (Owner owner : owners) {
-                for (Column column : owner.getColumns()) {
-                    if (column.datatype.equals("id")) {
-                        list.add(owner);
-                        table.insert(Integer.parseInt(column.value.toString()), list);
-                    }
-                }
-            }
-        }
+    public void columnIndex() {
+        BPlusTree<Integer,Owner> bPlusTree = new BPlusTree();
+        for (Owner owner : owners)
+            bPlusTree.insert(owner.getColumns()[0].hashCode(), owners.get(0));
+        secondIndex=bPlusTree;
+
     }
 
-    void creatOriginalId() {
+    public void creatIndex() {
         List<Owner> list = new ArrayList<>();
         for (Owner owner : owners) {
             list.add(owner);
             table.insert(owner.getId(), list);
         }
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public static int getIndex() {
+        return index;
+    }
+
+    public static void setIndex(int index) {
+        Table.index = index;
+    }
+
+    public BPlusTree<Integer, List<Owner>> getTable() {
+        return table;
+    }
+
+    public void setTable(BPlusTree<Integer, List<Owner>> table) {
+        this.table = table;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

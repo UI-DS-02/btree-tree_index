@@ -5,6 +5,7 @@ import bPlusTree.BPlusTree;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
 import database.Column;
@@ -40,10 +41,33 @@ public class Main {
     }
 
     static void select() {
-
+        System.out.println("Enter table name:");
+        String tableName = sc.nextLine();
+        System.out.println("Enter row name:");
+        String rowName = sc.nextLine();
+        for (Table table : database.getTables()) {
+            if (table.getName().equals(tableName)) {
+                if (rowName.equals("*")) {
+                    System.out.println(table.selectAll());
+                } else {
+                    for (Owner owner:table.getOwners()) {
+                        if (owner.getName().equals(rowName)) {
+                            System.out.println("Enter column name:");
+                            String columnName = sc.nextLine();
+                            if (columnName.equals("*")) {
+                                System.out.println(table.search(owner));
+                            } else
+                                for (Column column : owner.getColumns()) {
+                                    System.out.println(column.toString());
+                                }
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    static void insert() {
+    static void insert () {
         System.out.println("Please enter the number of tables:");
         int number_table = sc.nextInt();
         int number_row = 0;
@@ -55,13 +79,17 @@ public class Main {
             number_row = sc.nextInt();
             sc.nextLine();
             for (int i = 0; i < number_table; i++) {
-                Table table = database.creatTable();
+                System.out.println("Enter table name:");
+                String name = sc.nextLine();
+                Table table = database.creatTable(name);
                 for (int l = 0; l < number_row; l++) {
-                    Owner owner = table.make_new_row();
+                    System.out.println("Enter row name:");
+                    name = sc.nextLine();
+                    Owner owner = table.make_new_row(name);
                     System.out.println("Enter the data of this row:");
                     for (int k = 0; k < number_columns; k++) {
                         System.out.println("Enter the column title for this data:");
-                        String name_column = sc.next();
+                        String name_column = sc.next().toLowerCase(Locale.ROOT);
                         System.out.println("Enter the data type of the column:");
                         String data_type = sc.next();
                         //------------------------------------------------------------
@@ -73,12 +101,12 @@ public class Main {
                         owner.addColumn(column);
                     }
                 }
-                table.creatIndex(number_columns);
+                table.creatIndex();
             }
         }
     }
 
-    static Object check_type(String data_type) {
+    static Object check_type (String data_type){
         // checking if input type is true or not
         Scanner sc = new Scanner(System.in);
         Object input = null;
