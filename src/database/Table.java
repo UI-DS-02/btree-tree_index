@@ -1,6 +1,8 @@
 package database;
 
 import bPlusTree.*;
+import exception.InvalidInputException;
+import exception.NotFoundException;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -12,7 +14,7 @@ public class Table<T> {
     private ArrayList<Owner> owners;
     private ArrayList<Column> columns;
     private BPlusTree<Integer, List<Owner>> table;
-    private BPlusTree<Integer,Owner> secondIndex;
+    private BPlusTree<Integer, List<Owner>> secondIndex;
     private String name;
 
     public Owner[] getOwners() {
@@ -36,6 +38,26 @@ public class Table<T> {
         columns = new ArrayList<>();
         owners = new ArrayList<>();
         this.id = id;
+    }
+
+    public void update(String name, String newValue, String columnTile) {
+        //secondIndex.search(name);
+    }
+
+    public void update(int id, String newValue, String columnTile) {
+        try {
+            for (Owner owner : table.search(id)) {
+                for (Column column : owner.getColumns()) {
+                    if (column.getName().equals(columnTile)){
+                        column.setValue(newValue);
+                        return;
+                    }
+                    throw  new NotFoundException(" "+ columnTile +" is not valid");
+                }
+            }
+        } catch (RuntimeException runtimeException) {
+            throw new InvalidInputException();
+        }
     }
 
     public String selectAll() {
@@ -69,10 +91,10 @@ public class Table<T> {
     }
 
     public void columnIndex() {
-        BPlusTree<Integer,Owner> bPlusTree = new BPlusTree();
+        BPlusTree<Integer, List<Owner>> bPlusTree = new BPlusTree();
         for (Owner owner : owners)
-            bPlusTree.insert(owner.getColumns()[0].hashCode(), owners.get(0));
-        secondIndex=bPlusTree;
+            bPlusTree.insert(owner.getColumns()[0].hashCode(), owners);
+        secondIndex = bPlusTree;
 
     }
 

@@ -37,7 +37,30 @@ public class Main {
     }
 
     static void update() {
+        try {
+            System.out.println("Enter table name you want to update:");
+            String tableName = sc.nextLine();
+            System.out.println("Do you want to find by id?");
+            String answer = sc.nextLine().toLowerCase(Locale.ROOT);
+            System.out.println("Enter column title:");
+            String columnTitle = sc.nextLine();
+            System.out.println("Enter the updated value:");
+            String updatedValue = sc.nextLine();
+            if (answer.equals("yes")) {
+                System.out.println("Enter row ID:");
+                int rowId = sc.nextInt();
+                database.update(tableName, rowId, updatedValue, columnTitle);
 
+            } else {
+                System.out.println("Enter row Name:");
+                String rowName = sc.nextLine();
+                database.update(tableName, rowName, updatedValue, columnTitle);
+            }
+            System.out.println("Successfully updated");
+        }catch (RuntimeException runtimeException)
+        {
+            System.out.println(runtimeException.getMessage());
+        }
     }
 
     static void select() {
@@ -50,7 +73,7 @@ public class Main {
                 if (rowName.equals("*")) {
                     System.out.println(table.selectAll());
                 } else {
-                    for (Owner owner:table.getOwners()) {
+                    for (Owner owner : table.getOwners()) {
                         if (owner.getName().equals(rowName)) {
                             System.out.println("Enter column name:");
                             String columnName = sc.nextLine();
@@ -67,7 +90,7 @@ public class Main {
         }
     }
 
-    static void insert () {
+    static void insert() {
         System.out.println("Please enter the number of tables:");
         int number_table = sc.nextInt();
         int number_row = 0;
@@ -106,7 +129,7 @@ public class Main {
         }
     }
 
-    static Object check_type (String data_type){
+    static Object check_type(String data_type) {
         // checking if input type is true or not
         Scanner sc = new Scanner(System.in);
         Object input = null;
